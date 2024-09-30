@@ -1,4 +1,4 @@
-import os, sys, re, requests, bs4, time, random, json, string
+import os, sys, re, requests, time, random, string
 from bs4 import BeautifulSoup
 from datetime import datetime
 
@@ -20,31 +20,64 @@ def send_telegram_message(message):
     except Exception as e:
         print(f"Error sending message to Telegram: {e}")
 
+# Fetch random email with retry logic
 def fetch_random_email():
-    try:
-        domain_response = requests.get('https://email.jasa-bekasi.biz.id/api/domains/PF48QXUnMzt3fYZwerh2')
-        domains = domain_response.json()
-        username = ''.join(random.choices(string.ascii_lowercase + string.digits, k=10))
-        domain = random.choice(domains)
-        email = f"{username}@{domain}"
-        return email, domain
-    except Exception as e:
-        print(f"Error fetching email: {e}")
-        return None, None
+    attempts = 0
+    max_attempts = 3
+    delay = 5  # seconds between retries
 
+    while attempts < max_attempts:
+        try:
+            domain_response = requests.get('https://email.jasa-bekasi.biz.id/api/domains/PF48QXUnMzt3fYZwerh2')
+            domains = domain_response.json()
+
+            if len(domains) == 0:
+                raise ValueError("No domains available")
+
+            username = ''.join(random.choices(string.ascii_lowercase + string.digits, k=10))
+            domain = random.choice(domains)
+            email = f"{username}@{domain}"
+
+            return email, domain
+        except Exception as e:
+            attempts += 1
+            print(f"Error fetching email (attempt {attempts}/{max_attempts}): {e}")
+            if attempts < max_attempts:
+                print(f"Retrying in {delay} seconds...")
+                time.sleep(delay)
+            else:
+                print("Max attempts reached. Failed to fetch email.")
+                return None, None
+
+# Retrieve confirmation code from inbox with retry logic
 def inbox(email):
-    try:
-        url = f"https://email.jasa-bekasi.biz.id/api/messages/{email}/PF48QXUnMzt3fYZwerh2"
-        response = requests.get(url)
-        data = response.json()
-        for message in data:
-            if "Facebook" in message["sender_name"]:
-                confirmation_code = re.search(r'\d+', message["subject"]).group()
-                return confirmation_code
-        return None
-    except Exception as e:
-        print(f"Error fetching inbox: {e}")
-        return None
+    attempts = 0
+    max_attempts = 3
+    delay = 5  # seconds between retries
+
+    while attempts < max_attempts:
+        try:
+            url = f"https://email.jasa-bekasi.biz.id/api/messages/{email}/PF48QXUnMzt3fYZwerh2"
+            response = requests.get(url)
+            data = response.json()
+            for message in data:
+                if "Facebook" in message["sender_name"]:
+                    confirmation_code = re.search(r'\d+', message["subject"]).group()
+                    return confirmation_code
+            print(f"No Facebook confirmation code found for {email}")
+            attempts += 1
+            if attempts < max_attempts:
+                print(f"Retrying inbox for {email} in {delay} seconds...")
+                time.sleep(delay)
+        except Exception as e:
+            attempts += 1
+            print(f"Error fetching inbox (attempt {attempts}/{max_attempts}): {e}")
+            if attempts < max_attempts:
+                print(f"Retrying inbox for {email} in {delay} seconds...")
+                time.sleep(delay)
+            else:
+                print("Max attempts reached. Failed to retrieve confirmation code.")
+                return None
 
 ugen = []
 for xd in range(5000):
@@ -143,7 +176,7 @@ class create:
             self.loop += 1
             sys.stdout.write(f'\r{OO}[Creat-fb] {OO}{self.loop}/{str(lim)} OK:{len(ok)} - CP:{len(cp)}{OO} ')
             sys.stdout.flush()
-            if 'boy' in self.gender:
+                       if 'boy' in self.gender:
                 name = random.choice(boy).split(' ')
                 sex = '2'
             elif 'girl' in self.gender:
@@ -162,7 +195,8 @@ class create:
                     print(f"Could not retrieve confirmation code for {email}, skipping.")
                     continue
             except Exception as e:
-                pass
+                print(f"Error: {e}")
+                continue
 
             passw = "Mandiri00!"
 
@@ -197,7 +231,7 @@ class create:
                     "field_names[1]": "birthday_wrapper",
                     "birthday_day": str(random.randint(1, 28)),
                     "birthday_month": str(random.randint(1, 12)),
-                                        "birthday_year": str(random.randint(1992, 2004)),
+                    "birthday_year": str(random.randint(1992, 2004)),
                     "age_step_input": "",
                     "did_use_age": "",
                     "field_names[2]": "reg_email__",
@@ -243,5 +277,3 @@ class create:
         menu()
 
 menu()
-
- 
