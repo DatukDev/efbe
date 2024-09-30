@@ -176,7 +176,7 @@ class create:
             self.loop += 1
             sys.stdout.write(f'\r{OO}[Creat-fb] {OO}{self.loop}/{str(lim)} OK:{len(ok)} - CP:{len(cp)}{OO} ')
             sys.stdout.flush()
-                       if 'boy' in self.gender:
+                        if 'boy' in self.gender:
                 name = random.choice(boy).split(' ')
                 sex = '2'
             elif 'girl' in self.gender:
