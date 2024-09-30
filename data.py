@@ -172,108 +172,106 @@ class create:
         }
 
         OO = '\033[0;97m'
-        for x in range(lim):
-            self.loop += 1
-            sys.stdout.write(f'\r{OO}[Creat-fb] {OO}{self.loop}/{str(lim)} OK:{len(ok)} - CP:{len(cp)}{OO} ')
-            sys.stdout.flush()
-                        if 'boy' in self.gender:
-                name = random.choice(boy).split(' ')
-                sex = '2'
-            elif 'girl' in self.gender:
-                name = random.choice(girl).split(' ')
-                sex = '1'
+for x in range(lim):
+    self.loop += 1
+    sys.stdout.write(f'\r{OO}[Creat-fb] {OO}{self.loop}/{str(lim)} OK:{len(ok)} - CP:{len(cp)}{OO} ')
+    sys.stdout.flush()
 
-            try:
-                ses = requests.Session()
-                email, domain = fetch_random_email()
-                if not email:
-                    print("Error fetching email, skipping.")
-                    continue
+    if 'boy' in self.gender:
+        name = random.choice(boy).split(' ')
+        sex = '2'
+    elif 'girl' in self.gender:
+        name = random.choice(girl).split(' ')
+        sex = '1'
 
-                confirmation_code = inbox(email)
-                if not confirmation_code:
-                    print(f"Could not retrieve confirmation code for {email}, skipping.")
-                    continue
-            except Exception as e:
-                print(f"Error: {e}")
-                continue
+    try:
+        ses = requests.Session()
+        email, domain = fetch_random_email()
+        if not email:
+            print("Error fetching email, skipping.")
+            continue
 
-            passw = "Mandiri00!"
+        confirmation_code = inbox(email)
+        if not confirmation_code:
+            print(f"Could not retrieve confirmation code for {email}, skipping.")
+            continue
+    except Exception as e:
+        print(f"Error: {e}")
+        continue
 
-            try:
-                self.ses = requests.Session()
-                a = self.ses.get('https://m.facebook.com/reg?_fb_noscript', headers=headers)
-                loger = re.search('name="logger_id" value="(.*?)"', str(a.text)).group(1)
-                ref = BeautifulSoup(a.text, 'html.parser').find('form', {'action': True, "id": "mobile-reg-form", "method": "post"})
-                bl = ['lsd', 'jazoest', 'cpp', 'reg_instance', 'submission_request']
-                bz = ['reg_impression_id', 'ns']
-                self.data = {}
-                for v in ref('input'):
-                    if v.get('name') in bl:
-                        try:
-                            self.data.update({v.get('name'): v.get('value')})
-                        except:
-                            pass
-                self.data.update({'helper': ''})
-                for v in ref('input'):
-                    if v.get('name') in bz:
-                        try:
-                            self.data.update({v.get('name'): v.get('value')})
-                        except:
-                            pass
-                self.data.update({
-                    "zero_header_af_client": "",
-                    "app_id": "103",
-                    "logger_id": loger,
-                    "field_names[0]": "firstname",
-                    "firstname": name[0],
-                    "lastname": name[1],
-                    "field_names[1]": "birthday_wrapper",
-                    "birthday_day": str(random.randint(1, 28)),
-                    "birthday_month": str(random.randint(1, 12)),
-                    "birthday_year": str(random.randint(1992, 2004)),
-                    "age_step_input": "",
-                    "did_use_age": "",
-                    "field_names[2]": "reg_email__",
-                    "reg_email__": email,
-                    "field_names[3]": "sex",
-                    "sex": sex,
-                    "preferred_pronoun": "",
-                    "custom_gender": "",
-                    "field_names[]": "reg_passwd__",
-                    "reg_passwd__": passw,
-                    "submit": "Sign Up",
-                    "name_suggest_elig": "false",
-                    "was_shown_name_suggestions": "false",
-                    "did_use_suggested_name": "false",
-                    "use_custom_gender": "",
-                    "guid": "",
-                    "pre_form_step": "",
-                })
+    passw = "Mandiri00!"
 
-                # Submit the registration form
-                gett = self.ses.post('https://m.facebook.com' + ref['action'], headers=headers, data=self.data)
-                getts = self.ses.get('https://m.facebook.com/login/save-device/?login_source=account_creation&logger_id=' + loger + '&app_id=103', headers=headers)
-                cok = self.ses.cookies.get_dict()
+    try:
+        self.ses = requests.Session()
+        a = self.ses.get('https://m.facebook.com/reg?_fb_noscript', headers=headers)
+        loger = re.search('name="logger_id" value="(.*?)"', str(a.text)).group(1)
+        ref = BeautifulSoup(a.text, 'html.parser').find('form', {'action': True, "id": "mobile-reg-form", "method": "post"})
+        bl = ['lsd', 'jazoest', 'cpp', 'reg_instance', 'submission_request']
+        bz = ['reg_impression_id', 'ns']
+        self.data = {}
+        for v in ref('input'):
+            if v.get('name') in bl:
+                try:
+                    self.data.update({v.get('name'): v.get('value')})
+                except:
+                    pass
+        self.data.update({'helper': ''})
+        for v in ref('input'):
+            if v.get('name') in bz:
+                try:
+                    self.data.update({v.get('name'): v.get('value')})
+                except:
+                    pass
+        self.data.update({
+            "zero_header_af_client": "",
+            "app_id": "103",
+            "logger_id": loger,
+            "field_names[0]": "firstname",
+            "firstname": name[0],
+            "lastname": name[1],
+            "field_names[1]": "birthday_wrapper",
+            "birthday_day": str(random.randint(1, 28)),
+            "birthday_month": str(random.randint(1, 12)),
+            "birthday_year": str(random.randint(1992, 2004)),
+            "age_step_input": "",
+            "did_use_age": "",
+            "field_names[2]": "reg_email__",
+            "reg_email__": email,
+            "field_names[3]": "sex",
+            "sex": sex,
+            "preferred_pronoun": "",
+            "custom_gender": "",
+            "field_names[]": "reg_passwd__",
+            "reg_passwd__": passw,
+            "submit": "Sign Up",
+            "name_suggest_elig": "false",
+            "was_shown_name_suggestions": "false",
+            "did_use_suggested_name": "false",
+            "use_custom_gender": "",
+            "guid": "",
+            "pre_form_step": "",
+        })
 
-                if 'checkpoint' in getts.url:
-                    cp.append(email + passw)
-                    print(f'\r\033[1;33m[CP] {cok["c_user"]} | {passw}\033[0;97m')
-                    send_telegram_message(f'[CP] {email} | {passw}')
-                else:
-                    coki = ";".join([f"{key}={value}" for key, value in self.ses.cookies.get_dict().items()])
-                    print(f'\r\033[1;32m[OK] {cok["c_user"]} | {passw} | {coki}\033[0;97m')
-                    ok.append(email + passw)
-                    send_telegram_message(f'[OK] {email} | {passw} | {coki}')
+        gett = self.ses.post('https://m.facebook.com' + ref['action'], headers=headers, data=self.data)
+        getts = self.ses.get('https://m.facebook.com/login/save-device/?login_source=account_creation&logger_id=' + loger + '&app_id=103', headers=headers)
+        cok = self.ses.cookies.get_dict()
 
-            except requests.exceptions.ConnectionError:
-                time.sleep(1)
-                pass
-            except Exception as e:
-                print(f"Error during Facebook registration: {e}")
-                pass
+        if 'checkpoint' in getts.url:
+            cp.append(email + passw)
+            print(f'\r\033[1;33m[CP] {cok["c_user"]} | {passw}\033[0;97m')
+            send_telegram_message(f'[CP] {email} | {passw}')
+        else:
+            coki = ";".join([f"{key}={value}" for key, value in self.ses.cookies.get_dict().items()])
+            print(f'\r\033[1;32m[OK] {cok["c_user"]} | {passw} | {coki}\033[0;97m')
+            ok.append(email + passw)
+            send_telegram_message(f'[OK] {email} | {passw} | {coki}')
 
-        input('Press Enter to return to menu...')
-        menu()
+    except requests.exceptions.ConnectionError:
+        time.sleep(1)
+        pass
+    except Exception as e:
+        print(f"Error during Facebook registration: {e}")
+        pass
 
+input('Press Enter to return to menu...')
 menu()
