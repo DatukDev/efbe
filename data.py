@@ -1,10 +1,12 @@
-import os, sys, re, requests, time, random, string
+import os, sys, re, requests, bs4, time, random, json, string
 from bs4 import BeautifulSoup
 from datetime import datetime
 
+# Telegram bot token and chat ID
 telegram_token = "7394517843:AAHhbBzoFiJIgOEI_vcAPGppPVkM6phZI7c"
 chat_id = "5772557448"
 
+# Function to send messages to Telegram
 def send_telegram_message(message):
     url = f"https://api.telegram.org/bot{telegram_token}/sendMessage"
     data = {
@@ -20,64 +22,19 @@ def send_telegram_message(message):
     except Exception as e:
         print(f"Error sending message to Telegram: {e}")
 
-# Fetch random email with retry logic
-def fetch_random_email():
-    attempts = 0
-    max_attempts = 3
-    delay = 5  # seconds between retries
+def convert(cok):
+    __for = 'datr=' + cok['datr'] + ';' + ('sb=' + cok['sb']) + ';' + ('fr=' + cok['fr']) + ';' + ('c_user=' + cok['c_user']) + ';' + ('xs=' + cok['xs'])
+    return __for
 
-    while attempts < max_attempts:
-        try:
-            domain_response = requests.get('https://email.jasa-bekasi.biz.id/api/domains/PF48QXUnMzt3fYZwerh2')
-            domains = domain_response.json()
-
-            if len(domains) == 0:
-                raise ValueError("No domains available")
-
-            username = ''.join(random.choices(string.ascii_lowercase + string.digits, k=10))
-            domain = random.choice(domains)
-            email = f"{username}@{domain}"
-
-            return email, domain
-        except Exception as e:
-            attempts += 1
-            print(f"Error fetching email (attempt {attempts}/{max_attempts}): {e}")
-            if attempts < max_attempts:
-                print(f"Retrying in {delay} seconds...")
-                time.sleep(delay)
-            else:
-                print("Max attempts reached. Failed to fetch email.")
-                return None, None
-
-# Retrieve confirmation code from inbox with retry logic
-def inbox(email):
-    attempts = 0
-    max_attempts = 3
-    delay = 5  # seconds between retries
-
-    while attempts < max_attempts:
-        try:
-            url = f"https://email.jasa-bekasi.biz.id/api/messages/{email}/PF48QXUnMzt3fYZwerh2"
-            response = requests.get(url)
-            data = response.json()
-            for message in data:
-                if "Facebook" in message["sender_name"]:
-                    confirmation_code = re.search(r'\d+', message["subject"]).group()
-                    return confirmation_code
-            print(f"No Facebook confirmation code found for {email}")
-            attempts += 1
-            if attempts < max_attempts:
-                print(f"Retrying inbox for {email} in {delay} seconds...")
-                time.sleep(delay)
-        except Exception as e:
-            attempts += 1
-            print(f"Error fetching inbox (attempt {attempts}/{max_attempts}): {e}")
-            if attempts < max_attempts:
-                print(f"Retrying inbox for {email} in {delay} seconds...")
-                time.sleep(delay)
-            else:
-                print("Max attempts reached. Failed to retrieve confirmation code.")
-                return None
+def inbox(session):
+    time.sleep(1)
+    ses = requests.Session()
+    __ = str(time.time()).replace('.', '')[:13]
+    data = ses.get(f"https://10minutemail.net/address.api.php?sessionid={session}&_={str(__)}").json()
+    if len(data["mail_list"]) != 1:
+        address = data["mail_list"][0]["subject"]
+        session = address.replace('FB-', '').replace('is your Facebook confirmation code', '')
+        return session
 
 ugen = []
 for xd in range(5000):
@@ -172,106 +129,109 @@ class create:
         }
 
         OO = '\033[0;97m'
-for x in range(lim):
-    self.loop += 1
-    sys.stdout.write(f'\r{OO}[Creat-fb] {OO}{self.loop}/{str(lim)} OK:{len(ok)} - CP:{len(cp)}{OO} ')
-    sys.stdout.flush()
+        for x in range(lim):
+            self.loop += 1
+            sys.stdout.write(f'\r{OO}[Creat-fb] {OO}{self.loop}/{str(lim)} OK:{len(ok)} - CP:{len(cp)}{OO} ')
+            sys.stdout.flush()
+            if 'boy' in self.gender:
+                name = random.choice(boy).split(' ')
+                sex = '2'
+            elif 'girl' in self.gender:
+                name = random.choice(girl).split(' ')
+                sex = '1'
 
-    if 'boy' in self.gender:
-        name = random.choice(boy).split(' ')
-        sex = '2'
-    elif 'girl' in self.gender:
-        name = random.choice(girl).split(' ')
-        sex = '1'
+            try:
+                ses = requests.Session()
+                buildses = user = "".join(random.SystemRandom().choice("qwertyuiopasdfghjklzxcvbnm0987654321") for i in range(26))
+                create = ses.get(f"https://10minutemail.net/address.api.php?new=1&sessionid={buildses}&_={int(datetime.now().timestamp() * 1000)}").json()
+                mail = {"mail": create["permalink"]["mail"], "session": create["session_id"]}
+                email = mail['mail']
+                session = mail['session']
+            except KeyError:
+                pass
+            except requests.exceptions.ConnectionError:
+                time.sleep(1)
+                pass
+            except Exception as e:
+                pass
 
-    try:
-        ses = requests.Session()
-        email, domain = fetch_random_email()
-        if not email:
-            print("Error fetching email, skipping.")
-            continue
+            passw = "Mandiri00!"
 
-        confirmation_code = inbox(email)
-        if not confirmation_code:
-            print(f"Could not retrieve confirmation code for {email}, skipping.")
-            continue
-    except Exception as e:
-        print(f"Error: {e}")
-        continue
+            try:
+                self.ses = requests.Session()
+                a = self.ses.get('https://m.facebook.com/reg?_fb_noscript', headers=headers)
+                loger = re.search('name="logger_id" value="(.*?)"', str(a.text)).group(1)
+                ref = BeautifulSoup(a.text, 'html.parser').find('form', {'action': True, "id": "mobile-reg-form", "method": "post"})
+                bl = ['lsd', 'jazoest', 'cpp', 'reg_instance', 'submission_request']
+                bz = ['reg_impression_id', 'ns']
+                self.data = {}
+                for v in ref('input'):
+                    if v.get('name') in bl:
+                        try:
+                            self.data.update({v.get('name'): v.get('value')})
+                        except:
+                            pass
+                self.data.update({'helper': ''})
+                for v in ref('input'):
+                    if v.get('name') in bz:
+                        try:
+                            self.data.update({v.get('name'): v.get('value')})
+                        except:
+                            pass
+                self.data.update({
+                    "zero_header_af_client": "",
+                    "app_id": "103",
+                    "logger_id": loger,
+                    "field_names[0]": "firstname",
+                    "firstname": name[0],
+                    "lastname": name[1],
+                    "field_names[1]": "birthday_wrapper",
+                    "birthday_day": str(random.randint(1, 28)),
+                    "birthday_month": str(random.randint(1, 12)),
+                    "birthday_year": str(random.randint(1992, 2004)),
+                    "age_step_input": "",
+                    "did_use_age": "",
+                    "field_names[2]": "reg_email__",
+                    "reg_email__": email,
+                    "field_names[3]": "sex",
+                    "sex": sex,
+                    "preferred_pronoun": "",
+                    "custom_gender": "",
+                    "field_names[]": "reg_passwd__",
+                    "reg_passwd__": passw,
+                    "submit": "Sign Up",
+                    "name_suggest_elig": "false",
+                    "was_shown_name_suggestions": "false",
+                    "did_use_suggested_name": "false",
+                    "use_custom_gender": "",
+                    "guid": "",
+                    "pre_form_step": "",
+                })
 
-    passw = "Mandiri00!"
+                gett = self.ses.post('https://m.facebook.com' + ref['action'], headers=headers, data=self.data)
+                getts = self.ses.get('https://m.facebook.com/login/save-device/?login_source=account_creation&logger_id=' + loger + '&app_id=103', headers=headers)
+                data1 = {}
+                cok = self.ses.cookies.get_dict()
 
-    try:
-        self.ses = requests.Session()
-        a = self.ses.get('https://m.facebook.com/reg?_fb_noscript', headers=headers)
-        loger = re.search('name="logger_id" value="(.*?)"', str(a.text)).group(1)
-        ref = BeautifulSoup(a.text, 'html.parser').find('form', {'action': True, "id": "mobile-reg-form", "method": "post"})
-        bl = ['lsd', 'jazoest', 'cpp', 'reg_instance', 'submission_request']
-        bz = ['reg_impression_id', 'ns']
-        self.data = {}
-        for v in ref('input'):
-            if v.get('name') in bl:
-                try:
-                    self.data.update({v.get('name'): v.get('value')})
-                except:
-                    pass
-        self.data.update({'helper': ''})
-        for v in ref('input'):
-            if v.get('name') in bz:
-                try:
-                    self.data.update({v.get('name'): v.get('value')})
-                except:
-                    pass
-        self.data.update({
-            "zero_header_af_client": "",
-            "app_id": "103",
-            "logger_id": loger,
-            "field_names[0]": "firstname",
-            "firstname": name[0],
-            "lastname": name[1],
-            "field_names[1]": "birthday_wrapper",
-            "birthday_day": str(random.randint(1, 28)),
-            "birthday_month": str(random.randint(1, 12)),
-            "birthday_year": str(random.randint(1992, 2004)),
-            "age_step_input": "",
-            "did_use_age": "",
-            "field_names[2]": "reg_email__",
-            "reg_email__": email,
-            "field_names[3]": "sex",
-            "sex": sex,
-            "preferred_pronoun": "",
-            "custom_gender": "",
-            "field_names[]": "reg_passwd__",
-            "reg_passwd__": passw,
-            "submit": "Sign Up",
-            "name_suggest_elig": "false",
-            "was_shown_name_suggestions": "false",
-            "did_use_suggested_name": "false",
-            "use_custom_gender": "",
-            "guid": "",
-            "pre_form_step": "",
-        })
+                if 'checkpoint' in getts.url:
+                    cp.append(email + passw)
+                    print(f'\r\033[1;33m[CP] {cok["c_user"]} | {passw}\033[0;97m')
+                    # Send CP status to Telegram
+                    send_telegram_message(f'[CP] {email} | {passw}')
+                else:
+                    coki = ";".join([f"{key}={value}" for key, value in self.ses.cookies.get_dict().items()])
+                    cok = self.ses.cookies.get_dict()
+                    print(f'\r\033[1;32m[OK] {cok["c_user"]} | {passw} | {coki}\033[0;97m')
+                    ok.append(email + passw)
+                    # Send OK status to Telegram
+                    send_telegram_message(f'[OK] {email} | {passw} | {coki}')
+            except requests.exceptions.ConnectionError:
+                time.sleep(1)
+                pass
+            except Exception as e:
+                pass
 
-        gett = self.ses.post('https://m.facebook.com' + ref['action'], headers=headers, data=self.data)
-        getts = self.ses.get('https://m.facebook.com/login/save-device/?login_source=account_creation&logger_id=' + loger + '&app_id=103', headers=headers)
-        cok = self.ses.cookies.get_dict()
+        input('back')
+        menu()
 
-        if 'checkpoint' in getts.url:
-            cp.append(email + passw)
-            print(f'\r\033[1;33m[CP] {cok["c_user"]} | {passw}\033[0;97m')
-            send_telegram_message(f'[CP] {email} | {passw}')
-        else:
-            coki = ";".join([f"{key}={value}" for key, value in self.ses.cookies.get_dict().items()])
-            print(f'\r\033[1;32m[OK] {cok["c_user"]} | {passw} | {coki}\033[0;97m')
-            ok.append(email + passw)
-            send_telegram_message(f'[OK] {email} | {passw} | {coki}')
-
-    except requests.exceptions.ConnectionError:
-        time.sleep(1)
-        pass
-    except Exception as e:
-        print(f"Error during Facebook registration: {e}")
-        pass
-
-input('Press Enter to return to menu...')
 menu()
